@@ -252,6 +252,26 @@ if __name__ == '__main__':
         print('输入的考勤记录文件路径为: ', args_file_url)
         file_url = args_file_url
 
+    kqmd_name = '考勤名单.xlsx'
+    output_prefix = prefix(args_file_url)
+    kqmd_url = output_prefix[:output_prefix.rfind('\\')] + '\\' + kqmd_name
+    args_kqmd = input('请确认考勤人员名单excel文件的路径是否为{0}\n 是请输入1(默认)，否请输入2，请输入：'.format(kqmd_url))
+
+    if len(args_kqmd) == 0:
+        args_kqmd = '1'
+    while args_kqmd not in ('1', '2'):
+        args_kqmd = input('输入有误，需要输入数字1，2 。请重新输入:')
+
+    if args_kqmd == '2':
+        args_kqmd_url = input("请输入的考勤人员名单excel文件路径:")
+        print('输入的考勤人员名单excel文件路径为: ', args_kqmd_url)
+        kqmd_url = args_kqmd_url
+        while len(kqmd_url) == 0:
+            print('路径为空。')
+            args = input("请重新输入的考勤人员名单excel文件路径:")
+            print('输入的考勤人员名单excel文件路径: ', args_kqmd_url)
+            kqmd_url = args_kqmd_url
+
     print('开始统计')
     time.sleep(1)
 
