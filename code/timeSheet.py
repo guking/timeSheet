@@ -3,7 +3,6 @@ import math
 import os
 import calendar
 import logging
-import datetime
 from chinese_calendar import is_workday, is_holiday
 
 
