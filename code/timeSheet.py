@@ -149,21 +149,18 @@ def prefix(_file_url):
     return _file_url.replace('.xlsx', '').replace('.xls', '')
 
 
-def emp_st2(_file_url, _kqmd_name):
+def emp_st2(_kqmd_url):
     """
     获得考勤名单中Sheet2的内容
-    :param _file_url: 考勤名单的路径
-    :param _kqmd_name: 考勤名单的excel名字
+    :param _kqmd_url: 考勤名单的路径
     :return: 人员名单的dataframe
     """
-    output_prefix = prefix(_file_url)
-    emp_jk_file = output_prefix[:output_prefix.rfind('\\')] + '\\' + _kqmd_name
-    if os.path.exists(emp_jk_file):
-        print(emp_jk_file + '已经存在，程序将自动读取此文件的名单。')
+    if os.path.exists(_kqmd_url):
+        print(_kqmd_url + '文件存在，程序将自动读取此文件的名单。')
     else:
-        print('考勤名单.xlsx文件不存在，程序将自动生成名单文件' + emp_jk_file)
-        # emp_jk_df.to_csv(emp_jk_file, encoding='gbk', index=False)
-        emp_writer = pd.ExcelWriter(emp_jk_file)
+        print('考勤名单.xlsx文件不存在，程序将自动生成名单文件' + _kqmd_url)
+        # emp_jk_df.to_csv(emp_jk_file, encoding='gbk', index=_kqmd_url
+        emp_writer = pd.ExcelWriter(_kqmd_url)
         emp_jk = (['测试'])
         emp_jk_df = pd.DataFrame(columns=['人员'], data=emp_jk).rename_axis('序号').reset_index()
         emp_jk_df.to_excel(excel_writer=emp_writer, sheet_name='Sheet2', index=False, index_label=None)
@@ -171,23 +168,20 @@ def emp_st2(_file_url, _kqmd_name):
         emp_writer.close()
 
     # df: 考勤人员名单sheet2的dataframe
-    df_st2 = pd.read_excel(emp_jk_file, sheet_name='Sheet2', encoding='gbk', header=0)
+    df_st2 = pd.read_excel(_kqmd_url, sheet_name='Sheet2', encoding='gbk', header=0)
     df_st2['value'] = 0
     df_st2.columns = ['id', '职工姓名', 'value']
     # print('df_st2\n', df_st2)
     return df_st2
 
 
-def emp_st1(_file_url, _kqmd_name):
+def emp_st1(_kqmd_url):
     """
     获得考勤名单中Sheet1的内容
-    :param _file_url: 考勤名单的路径
-    :param _kqmd_name: 考勤名单的excel名字
+    :param _kqmd_url: 考勤名单的路径
     :return: 人员名单的dataframe
     """
-    output_prefix = prefix(_file_url)
-    emp_file = output_prefix[:output_prefix.rfind('\\')] + '\\' + _kqmd_name
-    df_st1 = pd.read_excel(emp_file, sheet_name='Sheet1', header=0).reset_index()
+    df_st1 = pd.read_excel(_kqmd_url, sheet_name='Sheet1', header=0).reset_index()
     df_st1['value'] = 0
     df_st1.columns = ['id', '参与项目', '职工姓名', '考勤编号', '角色', '办公场地', 'value']
     # print('df_st1\n', df_st1)
@@ -231,7 +225,6 @@ def time_sheet(_sheet_context, list_emp, timesheet_cate):
             timesheet_df['正常工时'] = timesheet_df.apply(lambda x: cal_diff(x['开始时间'], x['实际结束时间'])[1], axis=1)
             timesheet_df['加班工时'] = timesheet_df.apply(lambda x: cal_diff(x['开始时间'], x['实际结束时间'])[2], axis=1)
             timesheet_df['异常工时'] = timesheet_df.apply(lambda x: cal_diff(x['开始时间'], x['实际结束时间'])[3], axis=1)
-
     return timesheet_df
 
 
@@ -243,18 +236,15 @@ if __name__ == '__main__':
     timesheet_cate = input("请确认考勤记录格式，金 科输入1(默认)，涛 飞输入2，请输入:")
     if len(timesheet_cate) == 0:
         timesheet_cate = '1'
-    print(timesheet_cate)
     while timesheet_cate not in ('1', '2'):
-        print('输入有误，需要输入数字1，2 。金 科输入1(默认)，涛 飞输入2，请重新输入:')
+        input('输入有误，需要输入数字1，2 。金 科输入1(默认)，涛 飞输入2，请重新输入:')
 
     timesheet_cate_name = '金 科' if timesheet_cate == '1' else '涛 飞'
-
     if len(timesheet_cate) == 1:
         print('输入的考勤记录为: {0}, 勤记录格式：{1}'.format(timesheet_cate, timesheet_cate_name))
     
     args_file_url = input("请输入考勤记录文件路径:")
     print('输入的考勤记录文件路径为: ', args_file_url)
-    # args_file_url = "D:\\恒格文档\\考勤\\2020\\6月外包出入记录.xls"  # 7月涛飞职场外包考勤.xls"  #
     file_url = args_file_url
     while len(file_url) == 0:
         print('路径为空。')
@@ -262,7 +252,26 @@ if __name__ == '__main__':
         print('输入的考勤记录文件路径为: ', args_file_url)
         file_url = args_file_url
 
-    kqmd_name = '太平考勤名单.xlsx'
+    kqmd_name = '考勤名单.xlsx'
+    output_prefix = prefix(args_file_url)
+    kqmd_url = output_prefix[:output_prefix.rfind('\\')] + '\\' + kqmd_name
+    args_kqmd = input('请确认考勤人员名单excel文件的路径是否为{0}\n 是请输入1(默认)，否请输入2，请输入：'.format(kqmd_url))
+
+    if len(args_kqmd) == 0:
+        args_kqmd = '1'
+    while args_kqmd not in ('1', '2'):
+        args_kqmd = input('输入有误，需要输入数字1，2 。请重新输入:')
+
+    if args_kqmd == '2':
+        args_kqmd_url = input("请输入的考勤人员名单excel文件路径:")
+        print('输入的考勤人员名单excel文件路径为: ', args_kqmd_url)
+        kqmd_url = args_kqmd_url
+        while len(kqmd_url) == 0:
+            print('路径为空。')
+            args = input("请重新输入的考勤人员名单excel文件路径:")
+            print('输入的考勤人员名单excel文件路径: ', args_kqmd_url)
+            kqmd_url = args_kqmd_url
+
     excel_file_name = '.xlsx'
     out_date = '_' + pd.datetime.now().strftime('%Y%m%d%H%M%S')
     
@@ -273,11 +282,11 @@ if __name__ == '__main__':
         sheet_context = pd.read_excel(file_url, header=0)
 
     # sheet1的考勤人员名单属性(参与参与项目/人员/考勤编号/角色/办公场地)
-    df_emp_st1 = emp_st1(file_url, kqmd_name)
+    df_emp_st1 = emp_st1(kqmd_url)
     # print('df_emp_st1\n', df_emp_st1)
     list_emp_st1 = df_emp_st1['职工姓名'].tolist()
     # sheet2的考勤人员名单
-    df_emp_st2 = emp_st2(file_url, kqmd_name)
+    df_emp_st2 = emp_st2(kqmd_url)
     list_emp_st2 = df_emp_st2['职工姓名'].tolist()
 
     # 处理考勤记录
