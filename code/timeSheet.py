@@ -3,6 +3,7 @@ import math
 import os
 import calendar
 import logging
+import time
 from chinese_calendar import is_workday, is_holiday
 
 
@@ -272,6 +273,9 @@ if __name__ == '__main__':
             print('输入的考勤人员名单excel文件路径: ', args_kqmd_url)
             kqmd_url = args_kqmd_url
 
+    print('开始统计')
+    time.sleep(1)
+
     excel_file_name = '.xlsx'
     out_date = '_' + pd.datetime.now().strftime('%Y%m%d%H%M%S')
     
@@ -349,7 +353,7 @@ if __name__ == '__main__':
             print('===============')
             print('Sheet1统计结果:')
             print('===============')
-            print(attend1)
+            print(attend1.head(5))
             writer1 = pd.ExcelWriter(prefix(file_url) + out_date + '_Sheet1生成' + excel_file_name)
             attend1.to_excel(writer1, index=False, index_label=None)
             writer1.save()
@@ -372,7 +376,7 @@ if __name__ == '__main__':
             print('===============')
             print('Sheet2统计结果:')
             print('===============')
-            print(attend_pivot2)
+            print(attend_pivot2.head(5))
 
             writer2 = pd.ExcelWriter(prefix(file_url) + out_date + '_Sheet2生成' + excel_file_name)
             attend_pivot2.to_excel(writer2)
@@ -382,3 +386,5 @@ if __name__ == '__main__':
             logger.error('生成考勤统计记录1异常', e.errno, e.strerror)
     # ######################## sheet2 ########################################end
     print('完成！')
+    time.sleep(3)
+
