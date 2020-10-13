@@ -240,14 +240,14 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)  # Log等级总开关
 
-    timesheet_cate = input("请确认考勤记录格式，金科输入1(默认)，涛飞输入2，请输入:")
+    timesheet_cate = input("请确认考勤记录格式，金 科输入1(默认)，涛 飞输入2，请输入:")
     if len(timesheet_cate) == 0:
         timesheet_cate = '1'
     print(timesheet_cate)
     while timesheet_cate not in ('1', '2'):
-        print('输入有误，需要输入数字1，2 。金科输入1(默认)，涛飞输入2，请重新输入:')
+        print('输入有误，需要输入数字1，2 。金 科输入1(默认)，涛 飞输入2，请重新输入:')
 
-    timesheet_cate_name = '金科' if timesheet_cate == '1' else '涛飞'
+    timesheet_cate_name = '金 科' if timesheet_cate == '1' else '涛 飞'
 
     if len(timesheet_cate) == 1:
         print('输入的考勤记录为: {0}, 勤记录格式：{1}'.format(timesheet_cate, timesheet_cate_name))
