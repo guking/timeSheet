@@ -199,7 +199,7 @@ def time_sheet(_sheet_context, list_emp, timesheet_cate):
     处理考勤记录，获得最小时间、最大时间、工作时长的dataframe
     :param _sheet_context: 考勤记录dataframe
     :param list_emp: 考勤名单的list
-    :param timesheet_cate: 考勤记录类型：1:金科；2:涛飞
+    :param timesheet_cate: 考勤记录类型
     :return: 处理完成的考勤记录dataframe
     """
     if timesheet_cate == '1':
