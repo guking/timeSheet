@@ -169,10 +169,15 @@ def emp_st2(_kqmd_url):
         emp_writer.close()
 
     # df: 考勤人员名单sheet2的dataframe
-    df_st2 = pd.read_excel(_kqmd_url, sheet_name='Sheet2', encoding='gbk', header=0)
-    df_st2['value'] = 0
-    df_st2.columns = ['id', '职工姓名', 'value']
-    # print('df_st2\n', df_st2)
+    try:
+        df_st2 = pd.read_excel(_kqmd_url, sheet_name='Sheet2', encoding='gbk', header=0)
+        df_st2['value'] = 0
+        df_st2.columns = ['id', '职工姓名', 'value']
+    except:
+        df_st2 = pd.read_excel(_kqmd_url, encoding='gbk', header=0)
+        df_st2['value'] = 0
+        df_st2.columns = ['id', '职工姓名', 'value']
+        # print('df_st2\n', df_st2)
     return df_st2
 
 
@@ -182,10 +187,13 @@ def emp_st1(_kqmd_url):
     :param _kqmd_url: 考勤名单的路径
     :return: 人员名单的dataframe
     """
-    df_st1 = pd.read_excel(_kqmd_url, sheet_name='Sheet1', header=0).reset_index()
+    try:
+        df_st1 = pd.read_excel(_kqmd_url, sheet_name='Sheet1', header=0).reset_index()
+    except:
+        df_st1 = pd.read_excel(_kqmd_url, header=0).reset_index()
     df_st1['value'] = 0
     df_st1.columns = ['id', '参与项目', '职工姓名', '考勤编号', '角色', '办公场地', 'value']
-    # print('df_st1\n', df_st1)
+    print('df_st1\n', df_st1)
     return df_st1
 
 
@@ -281,15 +289,22 @@ if __name__ == '__main__':
     # 读取考勤记录
     try:
         sheet_context = pd.read_excel(file_url, header=0)
-    except:
-        sheet_context = pd.read_excel(file_url, header=0)
+    except Exception as e:
+        logger.error('加载考勤名单格式异常', e.errno, e.strerror)
 
     # sheet1的考勤人员名单属性(参与参与项目/人员/考勤编号/角色/办公场地)
-    df_emp_st1 = emp_st1(kqmd_url)
+    try:
+        df_emp_st1 = emp_st1(kqmd_url)
+    except Exception as e:
+        logger.error('加载考勤名单格式Sheet1异常', e.errno, e.strerror)
+
     # print('df_emp_st1\n', df_emp_st1)
     list_emp_st1 = df_emp_st1['职工姓名'].tolist()
     # sheet2的考勤人员名单
-    df_emp_st2 = emp_st2(kqmd_url)
+    try:
+        df_emp_st2 = emp_st2(kqmd_url)
+    except Exception as e:
+        logger.error('加载考勤名单格式Sheet2异常', e.errno, e.strerror)
     list_emp_st2 = df_emp_st2['职工姓名'].tolist()
 
     # 处理考勤记录
@@ -385,5 +400,5 @@ if __name__ == '__main__':
             logger.error('生成考勤统计记录1异常', e.errno, e.strerror)
     # ######################## sheet2 ########################################end
     print('完成！')
-    time.sleep(3)
+    time.sleep(5)
 
